@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Destinos — Planytrip</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','1468671174716704');fbq('track','PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1468671174716704&ev=PageView&noscript=1"/></noscript>
+<style>
+:root{
+  --sand:#f5e6c8;--desert:#c4853a;--desert-deep:#8b5a1a;
+  --sky:#1a3a5c;--salt:#f9f4ec;--text:#1a1208;--text-muted:#6b5a3a;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--salt);color:var(--text);overflow-x:hidden}
+
+/* STICKY WA */
+.sticky-wa{position:fixed;bottom:1.5rem;right:1.5rem;z-index:200;display:flex;align-items:center;gap:10px;background:#25d366;color:#fff;padding:13px 20px;border-radius:50px;font-size:.88rem;font-weight:500;text-decoration:none;box-shadow:0 6px 28px rgba(37,211,102,.45);transition:all .25s;animation:bounceIn 1s 1.5s ease both}
+.sticky-wa:hover{background:#1db954;transform:scale(1.04)}
+@keyframes bounceIn{from{opacity:0;transform:translateY(70px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.sticky-wa .wa-label{display:none}.sticky-wa{padding:13px;border-radius:50%;width:52px;height:52px;justify-content:center}}
+
+/* HERO */
+.hero{min-height:88vh;background:linear-gradient(160deg,#0a1a2e 0%,#1a3a5c 55%,#2a4a2a 100%);position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 5%;text-align:center;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 110%,rgba(196,133,58,.2) 0%,transparent 70%)}
+.stars{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;animation:twinkle var(--d,3s) var(--dl,0s) ease-in-out infinite alternate}
+@keyframes twinkle{from{opacity:.15;transform:scale(1)}to{opacity:.9;transform:scale(1.5)}}
+.hero-logo{position:relative;z-index:2;margin-bottom:1.5rem;animation:fadeD .7s ease both}
+.hero-logo-name{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:700;color:#fff;letter-spacing:.08em}
+.hero-logo-sub{font-size:.78rem;color:rgba(255,255,255,.5);letter-spacing:.2em;text-transform:uppercase;margin-top:4px}
+.hero-badge{position:relative;z-index:2;display:inline-block;background:rgba(196,133,58,.2);border:1px solid rgba(196,133,58,.45);color:var(--sand);font-size:.72rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;padding:6px 18px;border-radius:24px;margin-bottom:1.5rem;animation:fadeD .7s .1s ease both}
+.hero h1{position:relative;z-index:2;font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,7vw,5.5rem);font-weight:700;color:#fff;line-height:1;margin-bottom:1.5rem;animation:fadeD .7s .2s ease both}
+.hero h1 em{font-style:italic;color:var(--sand);display:block}
+.hero-desc{position:relative;z-index:2;font-size:1.05rem;color:rgba(255,255,255,.7);line-height:1.75;max-width:520px;margin:0 auto 2.5rem;font-weight:300;animation:fadeD .7s .3s ease both}
+.hero-trust{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:1.5rem;flex-wrap:wrap;animation:fadeD .7s .4s ease both}
+.trust-item{display:flex;align-items:center;gap:6px;font-size:.82rem;color:rgba(255,255,255,.55)}
+.trust-item span:first-child{color:var(--sand)}
+.hero-wave{position:absolute;bottom:-2px;left:0;right:0;z-index:3}
+@keyframes fadeD{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+
+/* FILTERS */
+.filters-wrap{background:#fff;border-bottom:1px solid rgba(196,133,58,.15);padding:1rem 5%;position:sticky;top:0;z-index:50;box-shadow:0 2px 16px rgba(0,0,0,.06)}
+.filters{display:flex;gap:.5rem;flex-wrap:wrap;max-width:1100px;margin:0 auto;align-items:center}
+.filter-label{font-size:.78rem;color:var(--text-muted);font-weight:500;margin-right:.25rem;white-space:nowrap}
+.filter-btn{padding:7px 15px;border:1.5px solid rgba(196,133,58,.3);border-radius:24px;background:transparent;font-size:.78rem;font-weight:500;color:var(--text-muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;white-space:nowrap}
+.filter-btn:hover{border-color:var(--desert);color:var(--desert)}
+.filter-btn.active{background:var(--desert);border-color:var(--desert);color:#fff}
+
+/* SECTION */
+.dest-section{padding:3.5rem 5%;max-width:1200px;margin:0 auto}
+.dest-section.alt{max-width:100%;padding:3.5rem 5%;background:#fff}
+.dest-section.alt .inner{max-width:1200px;margin:0 auto}
+.section-tag{font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--desert);margin-bottom:.5rem;display:block}
+.section-header{margin-bottom:2rem}
+.section-header h2{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:700;color:var(--text);line-height:1.15}
+.section-header p{font-size:.92rem;color:var(--text-muted);margin-top:.4rem;line-height:1.6}
+
+/* CARDS GRID */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}
+
+/* CARD — estructura limpia */
+.dest-card{background:#fff;border-radius:20px;overflow:hidden;border:1px solid rgba(196,133,58,.12);display:flex;flex-direction:column;transition:transform .3s,box-shadow .3s,opacity .5s,translate .5s;opacity:0;translate:0 24px}
+.dest-card.visible{opacity:1;translate:0 0}
+.dest-card:hover{box-shadow:0 16px 48px rgba(196,133,58,.15);transform:translateY(-4px)}
+.dest-card.hidden{display:none}
+
+/* Imagen — altura fija, sin overflow */
+.card-img{position:relative;height:210px;overflow:hidden;flex-shrink:0}
+.card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+.dest-card:hover .card-img img{transform:scale(1.06)}
+
+/* Badges sobre imagen */
+.card-badge{position:absolute;bottom:10px;left:10px;background:rgba(10,26,46,.78);backdrop-filter:blur(6px);color:var(--sand);font-size:.66rem;font-weight:500;letter-spacing:.09em;text-transform:uppercase;padding:4px 10px;border-radius:10px;border:.5px solid rgba(245,230,200,.25);line-height:1.3;max-width:calc(100% - 80px)}
+.card-tier{position:absolute;top:10px;right:10px;font-size:.66rem;font-weight:600;padding:4px 10px;border-radius:10px;letter-spacing:.07em;text-transform:uppercase}
+.tier-deluxe{background:rgba(196,133,58,.92);color:#fff}
+.tier-boutique{background:rgba(45,106,138,.92);color:#fff}
+.tier-eco{background:rgba(45,107,62,.92);color:#fff}
+
+/* Cuerpo de la card */
+.card-body{padding:1.25rem 1.25rem 1rem;flex:1;display:flex;flex-direction:column}
+.card-location{font-size:.73rem;color:var(--text-muted);font-weight:500;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.35rem}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:700;color:var(--text);line-height:1.15;margin-bottom:.6rem}
+.card-tags{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.7rem}
+.card-tag{font-size:.68rem;padding:3px 8px;border-radius:8px;background:rgba(196,133,58,.1);color:var(--desert);border:.5px solid rgba(196,133,58,.22);font-weight:500}
+.card-desc{font-size:.86rem;color:var(--text-muted);line-height:1.65;flex:1;margin-bottom:1rem}
+
+/* Footer de la card */
+.card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:.9rem;border-top:1px solid rgba(196,133,58,.12);gap:.75rem}
+.card-price{}
+.price-val{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:700;color:var(--desert);line-height:1}
+.price-meta{font-size:.68rem;color:var(--text-muted);margin-top:2px}
+.card-cta{display:inline-flex;align-items:center;gap:7px;background:#25d366;color:#fff;padding:10px 16px;border-radius:50px;font-size:.8rem;font-weight:500;text-decoration:none;transition:all .25s;white-space:nowrap;box-shadow:0 3px 14px rgba(37,211,102,.28);flex-shrink:0}
+.card-cta:hover{background:#1db954;transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,211,102,.4)}
+
+/* TESTIMONIALS */
+.testimonials{background:var(--sand);padding:4rem 5%}
+.testi-inner{max-width:1000px;margin:0 auto}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:2rem}
+.testi-card{background:#fff;border-radius:20px;padding:1.5rem;border:1px solid rgba(196,133,58,.15)}
+.stars-row{color:#f5a623;font-size:.9rem;margin-bottom:.75rem;letter-spacing:2px}
+.testi-text{font-size:.88rem;line-height:1.7;color:var(--text-muted);font-style:italic;margin-bottom:1rem}
+.testi-author{display:flex;align-items:center;gap:.75rem}
+.testi-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;color:#fff;flex-shrink:0}
+.testi-name{font-size:.88rem;font-weight:500;color:var(--text)}
+.testi-source{font-size:.75rem;color:var(--text-muted)}
+
+/* CTA FINAL */
+.cta-final{background:linear-gradient(160deg,#0a1a2e 0%,#1a3a5c 100%);padding:4.5rem 5%;text-align:center;position:relative;overflow:hidden}
+.cta-final::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 50% 100%,rgba(196,133,58,.2) 0%,transparent 70%)}
+.cta-final h2{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:700;color:#fff;line-height:1.1;margin-bottom:.75rem;position:relative;z-index:1}
+.cta-final h2 em{font-style:italic;color:var(--sand)}
+.cta-final p{font-size:1rem;color:rgba(255,255,255,.65);margin-bottom:2rem;position:relative;z-index:1;font-weight:300}
+.btn-wa-big{position:relative;z-index:1;display:inline-flex;align-items:center;gap:10px;background:#25d366;color:#fff;padding:17px 38px;border-radius:50px;font-size:1rem;font-weight:500;text-decoration:none;box-shadow:0 8px 30px rgba(37,211,102,.35);transition:all .25s}
+.btn-wa-big:hover{background:#1db954;transform:translateY(-2px);box-shadow:0 12px 38px rgba(37,211,102,.5)}
+
+/* FOOTER */
+footer{background:#0a1a2e;padding:2rem 5%;text-align:center;color:rgba(255,255,255,.4);font-size:.82rem;display:flex;flex-direction:column;gap:.5rem}
+footer a{color:rgba(255,255,255,.5);text-decoration:none}
+footer a:hover{color:var(--sand)}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .cards-grid{grid-template-columns:1fr}
+  .testi-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- STICKY WA -->
+<a class="sticky-wa" href="https://api.whatsapp.com/send?phone=56993582105&text=Hola%2C%20quiero%20conocer%20los%20destinos%20de%20Planytrip%20y%20encontrar%20el%20viaje%20ideal%20para%20m%C3%AD" target="_blank">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  <span class="wa-label">Ayúdame a elegir</span>
+</a>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="stars" id="stars"></div>
+  <div class="hero-logo">
+    <div class="hero-logo-name">PLANYTRIP</div>
+    <div class="hero-logo-sub">Agencia de Viajes · Chile</div>
+  </div>
+  <div class="hero-badge">✦ Escapadas 3D/2N por todo Chile</div>
+  <h1>Tu próxima<em>escapada</em></h1>
+  <p class="hero-desc">Desde el desierto más árido hasta los lagos del sur. Hospedaje, actividades y coordinación total incluida — tú solo decides a dónde ir.</p>
+  <div class="hero-trust">
+    <div class="trust-item"><span>⭐⭐⭐⭐⭐</span><span>5.0 en Google</span></div>
+    <div class="trust-item"><span>✓</span><span>+500 viajeros</span></div>
+    <div class="trust-item"><span>🛡</span><span>Reserva segura</span></div>
+    <div class="trust-item"><span>⚡</span><span>Respuesta en 2 hrs</span></div>
+  </div>
+  <svg class="hero-wave" viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,30 C360,60 1080,0 1440,30 L1440,60 L0,60 Z" fill="#f9f4ec"/>
+  </svg>
+</section>
+
+<!-- FILTERS -->
+<div class="filters-wrap">
+  <div class="filters">
+    <span class="filter-label">Filtrar:</span>
+    <button class="filter-btn active" data-filter="all">Todos</button>
+    <button class="filter-btn" data-filter="deluxe">Deluxe $385.000</button>
+    <button class="filter-btn" data-filter="boutique">Boutique $310.000</button>
+    <button class="filter-btn" data-filter="eco">Eco $275.000</button>
+    <button class="filter-btn" data-filter="norte">Norte</button>
+    <button class="filter-btn" data-filter="sur">Sur</button>
+    <button class="filter-btn" data-filter="costa">Costa</button>
+  </div>
+</div>
+
+<!-- ═══════════════ DELUXE ═══════════════ -->
+<section class="dest-section" id="destinos">
+  <div class="section-header">
+    <span class="section-tag">✦ Escapadas Deluxe</span>
+    <h2>Las más completas</h2>
+    <p>Hospedaje premium + actividades exclusivas · $385.000 por pareja · 3D/2N</p>
+  </div>
+  <div class="cards-grid">
+
+    <!-- San Pedro Express -->
+    <div class="dest-card" data-tier="deluxe" data-zone="norte">
+      <div class="card-img">
+        <img src="https://images.unsplash.com/photo-1681740103106-8676e8a9b014?fm=jpg&q=80&w=800&auto=format&fit=crop" alt="San Pedro de Atacama" loading="lazy">
+        <div class="card-tier tier-deluxe">Deluxe</div>
+        <div class="card-badge">Antofagasta · Norte</div>
+      </div>
+      <div class="card-body">
+        <div class="card-location">📍 San Pedro de Atacama</div>
+        <div class="card-title">San Pedro Express</div>
+        <div class="card-tags">
+          <span class="card-tag">🔭 Astronomía</span>
+          <span class="card-tag">🏜️ Desierto</span>
+          <span class="card-tag">🌋 Géiseres</span>
+          <span class="card-tag">3D/2N</span>
+        </div>
+        <p class="card-desc">El cielo más estrellado del mundo, el Valle de la Luna al atardecer y los Géiseres del Tatio al amanecer. Una experiencia que cambia la perspectiva.</p>
+        <div class="card-footer">
+          <div class="card-price">
+            <div class="price-val">$385.000</div>
+            <div class="price-meta">CLP por pareja · 3D/2N</div>
+          </div>
+          <a class="card-cta" href="https://api.whatsapp.com/send?phone=56993582105&text=Hola%2C%20me%20interesa%20la%20escapada%20*San%20Pedro%20Express*%20%E2%80%94%203D%2F2N%20por%20%24385.000.%20%C2%BFTienen%20disponibilidad%3F" target="_blank">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Consultar →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bienestar -->
+    <div class="dest-card" data-tier="deluxe" data-zone="norte">
+      <div class="card-img">
+        <img src="https://planytrip.cl/wp-content/uploads/2025/07/01-1-300x300.jpg" alt="Bienestar Valle del Elqui" loading="lazy">
+        <div class="card-tier tier-deluxe">Deluxe</div>
+        <div class="card-badge">Coquimbo · Norte Chico</div>
+      </div>
+      <div class="card-body">
+        <div class="card-location">📍 Valle del Elqui</div>
+        <div class="card-title">Bienestar</div>
+        <div class="card-tags">
+          <span class="card-tag">🧘 Yoga</span>
+          <span class="card-tag">♨️ Termas</span>
+          <span class="card-tag">🌿 Relax</span>
+          <span class="card-tag">3D/2N</span>
+        </div>
+        <p class="card-desc">Yoga al amanecer frente a las montañas del Elqui, termas naturales y meditación en el valle más místico del norte de Chile. El reset que necesitas.</p>
+        <div class="card-footer">
+          <div class="card-price">
+            <div class="price-val">$385.000</div>
+            <div class="price-meta">CLP por pareja · 3D/2N</div>
+          </div>
+          <a class="card-cta" href="https://api.whatsapp.com/send?phone=56993582105&text=Hola%2C%20me%20interesa%20la%20escapada%20*Bienestar*%20%E2%80%94%203D%2F2N%20en%20Valle%20del%20Elqui%20por%20%24385.000.%20%C2%BFTienen%20disponibilidad%3F" target="_blank">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Consultar →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Brebajes y Estrellas -->
+    <div class="dest-card" data-tier="deluxe" data-zone="norte">
+      <div class="card-img">
+        <img src="https://planytrip.cl/wp-content/uploads/2025/07/02-300x300.jpg" alt="Brebajes y Estrellas Valle del Elqui" loading="lazy">
+        <div class="card-tier tier-deluxe">Deluxe</div>
+        <div class="card-badge">Coquimbo · Norte Chico</div>
+      </div>
+      <div class="card-body">
+        <div class="card-location">📍 Valle del Elqui</div>
+        <div class="card-title">Brebajes y Estrellas</div>
+        <div class="card-tags">
+          <span class="card-tag">🍹 Pisco</span>
+          <span class="card-tag">🔭 Estrellas</span>
+          <span class="card-tag">♨️ Jacuzzi</span>
+          <span class="card-tag">3D/2N</span>
+        </div>
+        <p class="card-desc">Destilerías de pisco artesanal, jacuzzi privado bajo el cielo nocturno y observación astronómica. La escapada romántica del norte.</p>
+        <div class="card-footer">
+          <div class="card-price">
+            <div class="price-val">$385.000</div>
+            <div class="price-meta">CLP por pareja · 3D/2N</div>
+          </div>
+          <a class="card-cta" href="https://api.whatsapp.com/send?phone=56993582105&text=Hola%2C%20me%20interesa%20la%20escapada%20*Brebajes%20y%20Estrellas*%20%E2%80%94%203D%2F2N%20en%20Valle%20del%20Elqui%20por%20%24385.000.%20%C2%BFTienen%20disponibilidad%3F" target="_blank">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Consultar →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Surf & Party -->
+    <div class="dest-card" data-tier="deluxe" data-zone="costa">
+      <div class="card-img">
+        <img src="https://images.unsplash.com/photo-1505459668311-8dfac7952bf0?fm=jpg&q=80&w=800&auto=format&fit=crop" alt="Surf Party La Serena" loading="lazy">
+        <div class="card-tier tier-deluxe">Deluxe</div>
+        <div class="card-badge">La Serena · Norte Chico</div>
+      </div>
+      <div class="card-body">
+        <div class="card-location">📍 La Serena</div>
+        <div class="card-title">Surf & Party</div>
+        <div class="card-tags">
+          <span class="card-tag">🏄 Surf</span>
+          <span class="card-tag">🎉 Fiesta</span>
+          <span class="card-tag">🌊 Playa</span>
+          <span class="card-tag">3D/2N</span>
+        </div>
+        <p class="card-desc">Clases de surf en las mejores olas del norte, tarde de playa y una noche de fiesta en La Serena. La escapada para los que quieren adrenalina y diversión.</p>
+        <div class="card-footer">
+          <div class="card-price">
+            <div class="price-val">$385.000</div>
+            <div class="price-meta">CLP por pareja · 3D/2N</div>
+          </div>
+          <a class="card-cta" href="https://api.whatsapp.com/send?phone=56993582105&text=Hola%2C%20me%20interesa%20la%20escapada%20*Surf%20%26%20Party*%20%E2%80%94%203D%2F2N%20en%20La%20Serena%20por%20%24385.000.%20%C2%BFTienen%20disponibilidad%3F" target="_blank">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Consultar →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Combarbalá -->
+    <div class="dest-card" data-tier="deluxe" data-zone="norte">
+      <div class="card-img">
+        <img src="https://planytrip.cl/wp-content/uploads/2025/07/07-300x300.jpg" alt="Combarbalá" loading="lazy">
+        <div class="card-tier tier-deluxe">Deluxe</div>
+        <div class="card-badge">Coquimbo · Norte Chico</div>
+      </div>
+      <div class="card-body">
+        <div class="card-location">📍 Combarbalá</div>
+        <div class="card-title">Combarbalá</div>
+        <div class="card-tags">
+          <span class="card-tag">🪨 Petroglifos</span>
+          <span class="card-tag">🧀 Quesería</span>
+          <span class="card-tag">🌄 Montaña</span>
+          <span class="card-tag">3D/2N</span>
+        </div>
+        <p class="card-desc">Arte rupestre de 10.000 años, queserías artesanales locales y el pueblo de Quilitapia perdido entre montañas. Un destino poco conocido y completamente auténtico.</p>
+        <div class="card-footer">
+          <div class="card-price">
+            <div class="price-val">$385.000</div>
+            <div class="price-meta">CLP por pareja · 3D/2N</div>
+          </div>
+          <a class="card-cta" href="https://api.whatsapp.com/send?phone=56993582105&text=Hola%2C%20me%20interesa%20la%20escapada%20*Combarbal%C3%A1*%20%E2%80%94%203D%2F2N%20por%20%24385.000.%20%C2%BFTienen%20disponibilidad%3F" target="_blank">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Consultar →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Safari Marino -->
+    <div class="dest-card" data-tier="deluxe" data-zone="costa">
+      <div class="card-img">
+        <img src="https://images.unsplash.com/photo-1568430462989-44163eb1752f?fm=jpg&q=80&w=800&auto=format&fit=crop" alt="Safari Marino" loading="lazy">
+        <div class="card-tier tier-deluxe">Deluxe</div>
+        <div class="card-badge">Atacama · Norte</div>
+      </div>
+      <div class="card-body">
+        <div class="card-location">📍 Chañaral de Aceituno</div>
+        <div class="card-title">Safari Marino</div>
+        <div class="card-tags">
+          <span class="card-tag">🐋 Ballenas</span>
+          <span class="card-tag">🐬 Delfines</span>
+          <span class="card-tag">🌊 Mar</span>
+          <span class="card-tag">3D/2N</span>
+        </div>
+        <p class="card-desc">Avistamiento de ballenas jorobadas, lobos marinos y delfines en uno de los santuarios marinos más impresionantes de Sudamérica. Naturaleza en estado puro.</p>
+        <div class="card-footer">
+          <div class="card-price">
+            <div class="price-val">$385.000</div>
+            <div class="price-meta">CLP por pareja · 3D/2N</div>
+          </div>
+          <a class="card-cta" href="https://api.whatsapp.com/send?phone=56993582105&text=Hola%2C%20me%20interesa%20la%20escapada%20*Safari%20Marino*%20%E2%80%94%203D%2F2N%20en%20Cha%C3%B1aral%20de%20Aceituno%20por%20%24385.000.%20%C2%BFTienen%20disponibilidad%3F" target="_blank">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Consultar →
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════ BOUTIQUE ═══════════════ -->
+<section class="dest-section alt">
+  <div class="inner">
+    <div class="section-header">
+      <span class="section-tag">✦ Escapadas Boutique</span>
+      <h2>Experiencias con encanto</h2>
+      <p>Alojamiento boutique + actividades seleccionadas · $310.000 por pareja · 3D/2N</p>
+    </div>
+    <div class="cards-grid">
+
+      <!-- Astronómica -->
+      <div class="dest-card" data-tier="boutique" data-zone="norte">
+        <div class="card-img">
+          <img src="https://images.unsplash.com/photo-1464802686167-b939a6910659?fm=jpg&q=80&w=800&auto=format&fit=crop" alt="Astronómica Valle del Elqui" loading="lazy">
+          <div class="card-tier tier-boutique">Boutique</div>
+          <div class="card-badge">Coquimbo · Norte Chico</div>
+        </div>
+        <div class="card-body">
+          <div class="card-location">📍 Valle del Elqui</div>
+          <div class="card-title">Astronómica</div>
+          <div class="card-tags">
+            <span class="card-tag">🌟 Estrellas</span>
+            <span class="card-tag">🔭 Telescopios</span>
+            <span class="card-tag">🌌 Vía Láctea</span>
+            <span class="card-tag">3D/2N</span>
+          </div>
+          <p class="card-desc">El cielo más limpio de la Región de Coquimbo. Observación estelar con guía astronómico profesional y alojamiento boutique en el corazón del valle.</p>
+          <div class="card-footer">
+            <div class="card-price">
+              <div class="price-val">$310.000</div>
+              <div class="price-meta">CLP por pareja · 3D/2N</div>
+            </div>
+            <a class="card-cta" href="https://api.whatsapp.com/send?phone=56993582105&text=Hola%2C%20me%20interesa%20la%20escapada%20*Astron%C3%B3mica*%20%E2%80%94%203D%2F2N%20en%20Valle%20del%20Elqui%20por%20%24310.000.%20%C2%BFTienen%20disponibilidad%3F" target="_blank">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              Consultar →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Brebajes Boutique -->
+      <div class="dest-card" data-tier="boutique" data-zone="norte">
+        <div class="card-img">
+          <img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?fm=jpg&q=80&w=800&auto=format&fit=crop" alt="Brebajes Valle del Elqui" loading="lazy">
+          <div class="card-tier tier-boutique">Boutique</div>
+          <div class="card-badge">Coquimbo · Norte Chico</div>
+        </div>
+        <div class="card-body">
+          <div class="card-location">📍 Valle del Elqui</div>
+          <div class="card-title">Brebajes</div>
+          <div class="card-tags">
+            <span class="card-tag">🍇 Pisco</span>
+            <span class="card-tag">🥂 Destilerías</span>
+            <span class="card-tag">🌄 Valle</span>
+            <span class="card-tag">3D/2N</span>
+          </div>
+          <p class="card-desc">Las mejores destilerías de pisco artesanal del Elqui. Degustaciones, visita al proceso productivo y alojamiento boutique entre viñedos y montañas.</p>
+          <div class="card-footer">
+            <div class="card-price">
+              <div class="price-val">$310.000</div>
+              <div class="price-meta">CLP por pareja · 3D/2N</div>
+            </div>
+            <a class="card-cta" href="https://api.whatsapp.com/send?phone=56993582105&text=Hola%2C%20me%20interesa%20la%20escapada%20*Brebajes*%20%E2%80%94%203D%2F2N%20en%20Valle%20del%20Elqui%20por%20%24310.000.%20%C2%BFTienen%20disponibilidad%3F" target="_blank">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              Consultar →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aventura Boutique -->
+      <div class="dest-card" data-tier="boutique" data-zone="norte">
+        <div class="card-img">
+          <img src="https://planytrip.cl/wp-content/uploads/2025/07/14-300x300.jpg" alt="Aventura Valle del Elqui" loading="lazy">
+          <div class="card-tier tier-boutique">Boutique</div>
+          <div class="card-badge">Coquimbo · Norte Chico</div>
+        </div>
+        <div class="card-body">
+          <div class="card-location">📍 Valle del Elqui</div>
+          <div class="card-title">Aventura</div>
+          <div class="card-tags">
+            <span class="card-tag">🐴 Cabalgata</span>
+            <span class="card-tag">🥾 Trekking</span>
+            <span class="card-tag">🏔️ Montaña</span>
+            <span class="card-tag">3D/2N</span>
+          </div>
+          <p class="card-desc">Cabalgatas por los cerros del Elqui, trekking a cascadas escondidas y contacto directo con la naturaleza. Para los que prefieren el barro a la piscina.</p>
+          <div class="card-footer">
+            <div class="card-price">
+              <div class="price-val">$310.000</div>
+              <div class="price-meta">CLP por pareja · 3D/2N</div>
+            </div>
+            <a class="card-cta" href="https://api.whatsapp.com/send?phone=56993582105&text=Hola%2C%20me%20interesa%20la%20escapada%20*Aventura*%20%E2%80%94%203D%2F2N%20en%20Valle%20del%20Elqui%20por%20%24310.000.%20%C2%BFTienen%20disponibilidad%3F" target="_blank">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              Consultar →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bahía Inglesa -->
+      <div class="dest-card" data-tier="boutique" data-zone="costa">
+        <div class="card-img">
+          <img src="https://planytrip.cl/wp-content/uploads/2025/07/15-300x300.jpg" alt="Bahía Inglesa" loading="lazy">
+          <div class="card-tier tier-boutique">Boutique</div>
+          <div class="card-badge">Atacama · Norte</div>
+        </div>
+        <div class="card-body">
+          <div class="card-location">📍 Bahía Inglesa</div>
+          <div class="card-title">Bahía Inglesa</div>
+          <div class="card-tags">
+            <span class="card-tag">🦕 Paleontología</span>
+            <span class="card-tag">🏖️ Playa</span>
+            <span class="card-tag">🌊 Mar turquesa</span>
+            <span class="card-tag">3D/2N</span>
+          </div>
+          <p class="card-desc">La playa más linda del norte de Chile y el Museo Paleontológico de Caldera. Aguas turquesas, sol permanente y fósiles de millones de años.</p>
+          <div class="card-footer">
+            <div class="card-price">
+              <div class="price-val">$310.000</div>
+              <div class="price-meta">CLP por pareja · 3D/2N</div>
+            </div>
+            <a class="card-cta" href="https://api.whatsapp.com/send?phone=56993582105&text=Hola%2C%20me%20interesa%20la%20escapada%20*Bah%C3%ADa%20Inglesa*%20%E2%80%94%203D%2F2N%20por%20%24310.000.%20%C2%BFTienen%20disponibilidad%3F" target="_blank">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              Consultar →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navegación Frutillar -->
+      <div class="dest-card" data-tier="boutique" data-zone="sur">
+        <div class="card-img">
+          <img src="https://planytrip.cl/wp-content/uploads/2025/07/16-300x300.jpg" alt="Navegación Frutillar" loading="lazy">
+          <div class="card-tier tier-boutique">Boutique</div>
+          <div class="card-badge">Los Lagos · Sur</div>
+        </div>
+        <div class="card-body">
+          <div class="card-location">📍 Frutillar</div>
+          <div class="card-title">Navegación</div>
+          <div class="card-tags">
+            <span class="card-tag">⛵ Lago Llanquihue</span>
+            <span class="card-tag">🌋 Volcán Osorno</span>
+            <span class="card-tag">🎭 Teatro</span>
+            <span class="card-tag">3D/2N</span>
+          </div>
+          <p class="card-desc">Navegación por el lago Llanquihue con el volcán Osorno de fondo, visita al Teatro del Lago y la arquitectura alemana única de Frutillar.</p>
+          <div class="card-footer">
+            <div class="card-price">
+              <div class="price-val">$310.000</div>
+              <div class="price-meta">CLP por pareja · 3D/2N</div>
+            </div>
+            <a class="card-cta" href="https://api.whatsapp.com/send?phone=56993582105&text=Hola%2C%20me%20interesa%20la%20escapada%20*Navegaci%C3%B3n*%20%E2%80%94%203D%2F2N%20en%20Frutillar%20por%20%24310.000.%20%C2%BFTienen%20disponibilidad%3F" target="_blank">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              Consultar →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barco Pirata -->
+      <div class="dest-card" data-tier="boutique" data-zone="sur">
+        <div class="card-img">
+          <img src="https://planytrip.cl/wp-content/uploads/2025/07/17-300x300.jpg" alt="Barco Pirata Pucón" loading="lazy">
+          <div class="card-tier tier-boutique">Boutique</div>
+          <div class="card-badge">La Araucanía · Sur</div>
+        </div>
+        <div class="card-body">
+          <div class="card-location">📍 Pucón</div>
+          <div class="card-title">Barco Pirata</div>
+          <div class="card-tags">
+            <span class="card-tag">🏴‍☠️ Lago Villarrica</span>
+            <span class="card-tag">🌋 Volcán activo</span>
+            <span class="card-tag">🎭 Aventura</span>
+            <span class="card-tag">3D/2N</span>
+          </div>
+          <p class="card-desc">Navegación en barco pirata por el lago Villarrica con el volcán activo de fondo. La experiencia más épica y fotogénica del sur de Chile.</p>
+          <div class="card-footer">
+            <div class="card-price">
+              <div class="price-val">$310.000</div>
+              <div class="price-meta">CLP por pareja · 3D/2N</div>
+            </div>
+            <a class="card-cta" href="https://api.whatsapp.com/send?phone=56993582105&text=Hola%2C%20me%20interesa%20la%20escapada%20*Barco%20Pirata*%20%E2%80%94%203D%2F2N%20en%20Puc%C3%B3n%20por%20%24310.000.%20%C2%BFTienen%20disponibilidad%3F" target="_blank">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              Consultar →
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ ECO ═══════════════ -->
+<section class="dest-section">
+  <div class="section-header">
+    <span class="section-tag">✦ Escapadas Eco</span>
+    <h2>Lo esencial, sin adornos</h2>
+    <p>Alojamiento eco + actividades clave · $275.000 por pareja · 3D/2N</p>
+  </div>
+  <div class="cards-grid">
+
+    <!-- Brebajes Eco -->
+    <div class="dest-card" data-tier="eco" data-zone="norte">
+      <div class="card-img">
+        <img src="https://images.unsplash.com/photo-1474722883778-792e7990302f?fm=jpg&q=80&w=800&auto=format&fit=crop" alt="Brebajes Eco Elqui" loading="lazy">
+        <div class="card-tier tier-eco">Eco</div>
+        <div class="card-badge">Coquimbo · Norte Chico</div>
+      </div>
+      <div class="card-body">
+        <div class="card-location">📍 Valle del Elqui</div>
+        <div class="card-title">Brebajes <span style="font-size:.8em;opacity:.6">[Eco]</span></div>
+        <div class="card-tags">
+          <span class="card-tag">🍇 Pisco</span>
+          <span class="card-tag">🌿 Eco</span>
+          <span class="card-tag">🏡 Cabañas</span>
+          <span class="card-tag">3D/2N</span>
+        </div>
+        <p class="card-desc">La ruta del pisco artesanal con alojamiento en cabaña eco. Misma experiencia, mayor conexión con la naturaleza y menor impacto ambiental.</p>
+        <div class="card-footer">
+          <div class="card-price">
+            <div class="price-val">$275.000</div>
+            <div class="price-meta">CLP por pareja · 3D/2N</div>
+          </div>
+          <a class="card-cta" href="https://api.whatsapp.com/send?phone=56993582105&text=Hola%2C%20me%20interesa%20la%20escapada%20*Brebajes%20Eco*%20%E2%80%94%203D%2F2N%20en%20Valle%20del%20Elqui%20por%20%24275.000.%20%C2%BFTienen%20disponibilidad%3F" target="_blank">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Consultar →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Astronómica Eco -->
+    <div class="dest-card" data-tier="eco" data-zone="norte">
+      <div class="card-img">
+        <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?fm=jpg&q=80&w=800&auto=format&fit=crop" alt="Astronómica Eco Elqui" loading="lazy">
+        <div class="card-tier tier-eco">Eco</div>
+        <div class="card-badge">Coquimbo · Norte Chico</div>
+      </div>
+      <div class="card-body">
+        <div class="card-location">📍 Valle del Elqui</div>
+        <div class="card-title">Astronómica <span style="font-size:.8em;opacity:.6">[Eco]</span></div>
+        <div class="card-tags">
+          <span class="card-tag">🌟 Estrellas</span>
+          <span class="card-tag">🌿 Eco</span>
+          <span class="card-tag">🏕️ Glamping</span>
+          <span class="card-tag">3D/2N</span>
+        </div>
+        <p class="card-desc">El mismo cielo estrellado en formato eco-glamping. Duermes bajo las estrellas, despiertas con el Elqui y sin contaminar nada.</p>
+        <div class="card-footer">
+          <div class="card-price">
+            <div class="price-val">$275.000</div>
+            <div class="price-meta">CLP por pareja · 3D/2N</div>
+          </div>
+          <a class="card-cta" href="https://api.whatsapp.com/send?phone=56993582105&text=Hola%2C%20me%20interesa%20la%20escapada%20*Astron%C3%B3mica%20Eco*%20%E2%80%94%203D%2F2N%20en%20Valle%20del%20Elqui%20por%20%24275.000.%20%C2%BFTienen%20disponibilidad%3F" target="_blank">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Consultar →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Aventura Eco -->
+    <div class="dest-card" data-tier="eco" data-zone="norte">
+      <div class="card-img">
+        <img src="https://planytrip.cl/wp-content/uploads/2025/07/22-300x300.jpg" alt="Aventura Eco Valle del Elqui" loading="lazy">
+        <div class="card-tier tier-eco">Eco</div>
+        <div class="card-badge">Coquimbo · Norte Chico</div>
+      </div>
+      <div class="card-body">
+        <div class="card-location">📍 Valle del Elqui</div>
+        <div class="card-title">Aventura <span style="font-size:.8em;opacity:.6">[Eco]</span></div>
+        <div class="card-tags">
+          <span class="card-tag">🐴 Cabalgata</span>
+          <span class="card-tag">🌿 Eco</span>
+          <span class="card-tag">🏕️ Camping</span>
+          <span class="card-tag">3D/2N</span>
+        </div>
+        <p class="card-desc">Cabalgatas, trekking y noches en camping. Aventura real sin pantallas, con el Elqui como paisaje permanente y cero impacto ambiental.</p>
+        <div class="card-footer">
+          <div class="card-price">
+            <div class="price-val">$275.000</div>
+            <div class="price-meta">CLP por pareja · 3D/2N</div>
+          </div>
+          <a class="card-cta" href="https://api.whatsapp.com/send?phone=56993582105&text=Hola%2C%20me%20interesa%20la%20escapada%20*Aventura%20Eco*%20%E2%80%94%203D%2F2N%20en%20Valle%20del%20Elqui%20por%20%24275.000.%20%C2%BFTienen%20disponibilidad%3F" target="_blank">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Consultar →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navegación Eco -->
+    <div class="dest-card" data-tier="eco" data-zone="sur">
+      <div class="card-img">
+        <img src="https://planytrip.cl/wp-content/uploads/2025/07/16-300x300.jpg" alt="Navegación Eco Frutillar" loading="lazy">
+        <div class="card-tier tier-eco">Eco</div>
+        <div class="card-badge">Los Lagos · Sur</div>
+      </div>
+      <div class="card-body">
+        <div class="card-location">📍 Frutillar</div>
+        <div class="card-title">Navegación <span style="font-size:.8em;opacity:.6">[Eco]</span></div>
+        <div class="card-tags">
+          <span class="card-tag">⛵ Lagos</span>
+          <span class="card-tag">🌿 Eco</span>
+          <span class="card-tag">🌋 Sur</span>
+          <span class="card-tag">3D/2N</span>
+        </div>
+        <p class="card-desc">Navegación por los lagos del sur con alojamiento eco. La belleza del Llanquihue y el Osorno, sin los extras de lujo pero con todo lo que importa.</p>
+        <div class="card-footer">
+          <div class="card-price">
+            <div class="price-val">$275.000</div>
+            <div class="price-meta">CLP por pareja · 3D/2N</div>
+          </div>
+          <a class="card-cta" href="https://api.whatsapp.com/send?phone=56993582105&text=Hola%2C%20me%20interesa%20la%20escapada%20*Navegaci%C3%B3n%20Eco*%20%E2%80%94%203D%2F2N%20en%20Frutillar%20por%20%24275.000.%20%C2%BFTienen%20disponibilidad%3F" target="_blank">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Consultar →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barco Pirata Eco -->
+    <div class="dest-card" data-tier="eco" data-zone="sur">
+      <div class="card-img">
+        <img src="https://images.unsplash.com/photo-1503220317375-aaad61436b1b?fm=jpg&q=80&w=800&auto=format&fit=crop" alt="Barco Pirata Eco Pucón" loading="lazy">
+        <div class="card-tier tier-eco">Eco</div>
+        <div class="card-badge">La Araucanía · Sur</div>
+      </div>
+      <div class="card-body">
+        <div class="card-location">📍 Pucón</div>
+        <div class="card-title">Barco Pirata <span style="font-size:.8em;opacity:.6">[Eco]</span></div>
+        <div class="card-tags">
+          <span class="card-tag">🏴‍☠️ Villarrica</span>
+          <span class="card-tag">🌿 Eco</span>
+          <span class="card-tag">🌋 Volcán</span>
+          <span class="card-tag">3D/2N</span>
+        </div>
+        <p class="card-desc">La aventura del barco pirata en el lago Villarrica con alojamiento eco. El volcán activo de fondo, el lago verde y una experiencia que no se olvida.</p>
+        <div class="card-footer">
+          <div class="card-price">
+            <div class="price-val">$275.000</div>
+            <div class="price-meta">CLP por pareja · 3D/2N</div>
+          </div>
+          <a class="card-cta" href="https://api.whatsapp.com/send?phone=56993582105&text=Hola%2C%20me%20interesa%20la%20escapada%20*Barco%20Pirata%20Eco*%20%E2%80%94%203D%2F2N%20en%20Puc%C3%B3n%20por%20%24275.000.%20%C2%BFTienen%20disponibilidad%3F" target="_blank">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Consultar →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cata de Vinos Eco -->
+    <div class="dest-card" data-tier="eco" data-zone="costa">
+      <div class="card-img">
+        <img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?fm=jpg&q=80&w=800&auto=format&fit=crop" alt="Cata de Vinos El Tabo" loading="lazy">
+        <div class="card-tier tier-eco">Eco</div>
+        <div class="card-badge">Valparaíso · Costa Central</div>
+      </div>
+      <div class="card-body">
+        <div class="card-location">📍 El Tabo</div>
+        <div class="card-title">Cata de Vinos <span style="font-size:.8em;opacity:.6">[Eco]</span></div>
+        <div class="card-tags">
+          <span class="card-tag">🍷 Vinos</span>
+          <span class="card-tag">🌊 Costa</span>
+          <span class="card-tag">🏡 Eco</span>
+          <span class="card-tag">3D/2N</span>
+        </div>
+        <p class="card-desc">Cata de vinos chilenos con vista al Pacífico. Bodegas, maridajes y el Océano como telón de fondo. Escapada de costa con carácter gastronómico.</p>
+        <div class="card-footer">
+          <div class="card-price">
+            <div class="price-val">$275.000</div>
+            <div class="price-meta">CLP por pareja · 3D/2N</div>
+          </div>
+          <a class="card-cta" href="https://api.whatsapp.com/send?phone=56993582105&text=Hola%2C%20me%20interesa%20la%20escapada%20*Cata%20de%20Vinos%20Eco*%20%E2%80%94%203D%2F2N%20en%20El%20Tabo%20por%20%24275.000.%20%C2%BFTienen%20disponibilidad%3F" target="_blank">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Consultar →
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="testi-inner">
+    <div class="section-header" style="text-align:center">
+      <span class="section-tag">✦ Lo que dicen nuestros viajeros</span>
+      <h2>Experiencias reales</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="stars-row">★★★★★</div>
+        <p class="testi-text">"Todo perfecto, muy buen servicio y todo súper organizado. 100% recomendable, me encantó la experiencia."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:#c4853a">BT</div>
+          <div><div class="testi-name">Barbara Toledo</div><div class="testi-source">Google · Viajera verificada</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars-row">★★★★★</div>
+        <p class="testi-text">"Excelente experiencia y hermosa energía. El tour astronómico fue lo más impresionante que he vivido. 10000% recomendado!"</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:#1a3a5c">VT</div>
+          <div><div class="testi-name">Victoria Toledo</div><div class="testi-source">Google · Viajera verificada</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars-row">★★★★★</div>
+        <p class="testi-text">"Excellent service!! Great experience, the coordination was perfect. I would definitely recommend to book their services."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:#3d6b3e">JG</div>
+          <div><div class="testi-name">Javier Galvez</div><div class="testi-source">Google · Viajero verificado</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <h2>¿No sabes<em> cuál elegir?</em></h2>
+  <p>Cuéntanos cómo eres, cuánto tiempo tienes y te armamos la escapada perfecta — en menos de 2 horas.</p>
+  <a class="btn-wa-big" href="https://api.whatsapp.com/send?phone=56993582105&text=Hola%2C%20quiero%20viajar%20pero%20no%20s%C3%A9%20qu%C3%A9%20escapada%20elegir.%20%C2%BFMe%20ayudan%20a%20encontrar%20la%20ideal%20para%20m%C3%AD%3F" target="_blank">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Ayúdame a elegir mi escapada
+  </a>
+</section>
+
+<footer>
+  <div><strong style="color:rgba(255,255,255,.7);font-family:'Cormorant Garamond',serif;font-size:1.1rem">PLANYTRIP</strong> · Agencia de Viajes · Chile</div>
+  <div><a href="mailto:contacto@planytrip.cl">contacto@planytrip.cl</a> · <a href="tel:+56993582105">+56 9 9358 2105</a> · <a href="https://planytrip.cl" target="_blank">planytrip.cl</a></div>
+  <div>© 2026 Planytrip · Todos los derechos reservados</div>
+</footer>
+
+<script>
+// Stars
+const starsEl=document.getElementById('stars');
+for(let i=0;i<80;i++){const s=document.createElement('div');s.className='star';s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*3}s;--dl:${Math.random()*3}s;opacity:${.2+Math.random()*.7};width:${1+Math.random()*2}px;height:${1+Math.random()*2}px`;starsEl.appendChild(s)}
+
+// Scroll reveal
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*60);obs.unobserve(e.target)}})
+},{threshold:.08});
+document.querySelectorAll('.dest-card').forEach(el=>obs.observe(el));
+
+// Filters
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f=btn.dataset.filter;
+    document.querySelectorAll('.dest-card').forEach(card=>{
+      if(f==='all'){card.classList.remove('hidden')}
+      else{card.classList.toggle('hidden',card.dataset.tier!==f&&card.dataset.zone!==f)}
+    });
+  });
+});
+</script>
+</body>
+</html>
